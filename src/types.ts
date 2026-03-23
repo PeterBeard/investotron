@@ -10,6 +10,7 @@ interface SimulationData {
 interface StubSimulationState {
     id: string,
     label: string,
+    type: string,
 }
 
 interface SimulationState extends StubSimulationState {

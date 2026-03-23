@@ -25,7 +25,6 @@ function SimulationParameters({ setChartState }: { setChartState: (state: ChartS
     const [ simulationType, setSimulationType ] = useState('RetirementSimulation');
 
     function handleYearsChange(event: ChangeEvent) {
-        console.log(event);
         setYears(Number(event.target.value));
     }
 
@@ -122,6 +121,7 @@ function SimulationParameters({ setChartState }: { setChartState: (state: ChartS
             state: {
                 id: crypto.randomUUID(),
                 label: 'Uninitialized Simulation',
+                type: simulationType,
             },
         });
     }
