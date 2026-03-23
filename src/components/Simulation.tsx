@@ -1,37 +1,49 @@
 import IconButton from '@mui/material/IconButton';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
+import type { ActionHandler, ChangeEventHandler } from '../types.ts';
 
-function Simulation(props) {
+interface SimulationProps {
+    simulationID: string,
+    label: string,
+    caption: string,
+    dispatchSimulationUpdate: ActionHandler,
+    handleLabelChange: ChangeEventHandler,
+    children: []
+};
+
+
+function Simulation({ dispatchSimulationUpdate, label, caption, simulationID, handleLabelChange, children }: SimulationProps) {
     function deleteSimulation() {
-        props.dispatchSimulationUpdate({
+        dispatchSimulationUpdate({
             type: 'delete',
             state: {
-                id: props.simulationID,
+                id: simulationID,
             },
         });
     }
 
+    /*
     function cloneSimulation() {
         // TODO: simulations don't support setting initial state yet
-        props.dispatchSimulationUpdate({
+        dispatchSimulationUpdate({
             type: 'clone',
             state: {
-                id: props.simulationID,
+                id: simulationID,
             },
         });
     }
+    */
 
     return (
         <Grid container spacing={2} columns={16}>
             <Grid size={16}>
                 <Stack spacing={1} direction="row">
                     <p className="caption">
-                        { props.caption }
+                        { caption }
                     </p>
                 </Stack>
             </Grid>
@@ -46,9 +58,9 @@ function Simulation(props) {
                         label="Name"
                         name="simulation-label"
                         size="small"
-                        value={props.label}
-                        onChange={props.handleLabelChange} />
-                    { props.children }
+                        value={label}
+                        onChange={handleLabelChange} />
+                    { children }
                 </Stack>
             </Grid>
         </Grid>

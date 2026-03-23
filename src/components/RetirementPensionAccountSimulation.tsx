@@ -9,10 +9,10 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 
+import type { ActionHandler, ChangeEvent, SimulationData } from '../types.ts';
 import {Simulation} from './Simulation.tsx';
 
-interface SimulationState {
-    balance: number,
+interface RetirementSimulationState extends SimulationData {
     deposit: number,
     depositFrequency: string,
     inflateDeposits: boolean,
@@ -40,7 +40,13 @@ interface PartialSimulationState {
     readonly inflationRate?: number,
 }
 
-function RetirementPensionAccountSimulation({ simulationID, simulationTypeID, dispatchSimulationUpdate }) {
+interface RetirementPensionAccountSimulationProps {
+    simulationID: string,
+    simulationTypeID: string,
+    dispatchSimulationUpdate: ActionHandler,
+};
+
+function RetirementPensionAccountSimulation({ simulationID, simulationTypeID, dispatchSimulationUpdate }: RetirementPensionAccountSimulationProps) {
     const [ label, setLabel ] = useState('Pension account');
     const [ balance, setBalance ] = useState(35_000);
     const [ deposit, setDeposit ] = useState(300);
@@ -54,80 +60,80 @@ function RetirementPensionAccountSimulation({ simulationID, simulationTypeID, di
     const [ inflationRate, setInflationRate ] = useState(2.5);
     const [ interestRate, setInterestRate ] = useState(8);
 
-    function handleLabelChange(event) {
+    function handleLabelChange(event: ChangeEvent) {
         const newLabel = event.target.value;
         setLabel(newLabel)
         updateSimulationState({label: newLabel});
     }
 
-    function handleDepositChange(event) {
+    function handleDepositChange(event: ChangeEvent) {
         const newDeposit = Number(event.target.value);
         setDeposit(newDeposit);
         updateSimulationState({deposit: newDeposit});
     }
 
-    function handleBalanceChange(event) {
+    function handleBalanceChange(event: ChangeEvent) {
         const newBalance = Number(event.target.value);
         setBalance(newBalance);
         updateSimulationState({balance: newBalance});
     }
 
-    function handleWithdrawalChange(event) {
+    function handleWithdrawalChange(event: ChangeEvent) {
         const newWithdrawal = Number(event.target.value);
         setWithdrawal(newWithdrawal);
         updateSimulationState({withdrawal: newWithdrawal});
     }
 
-    function handleWithdrawalStartYearChange(event) {
+    function handleWithdrawalStartYearChange(event: ChangeEvent) {
         const newWithdrawalStartYear = Number(event.target.value);
         setWithdrawalStartYear(newWithdrawalStartYear);
         updateSimulationState({withdrawalStartYear: newWithdrawalStartYear});
     }
 
-    function handleDepositFrequencyChange(event) {
+    function handleDepositFrequencyChange(event: ChangeEvent) {
         const newDepositFrequency = event.target.value;
         setDepositFrequency(newDepositFrequency);
         updateSimulationState({depositFrequency: newDepositFrequency});
     }
 
-    function handleInflateDepositsChange(event) {
+    function handleInflateDepositsChange(event: ChangeEvent) {
         const newInflateDeposits = event.target.checked;
         setInflateDeposits(newInflateDeposits);
         updateSimulationState({inflateDeposits: newInflateDeposits});
     }
 
-    function handleHasEmployerMatchChange(event) {
+    function handleHasEmployerMatchChange(event: ChangeEvent) {
         const newHasEmployerMatch = event.target.checked;
         setHasEmployerMatch(newHasEmployerMatch);
         updateSimulationState({hasEmployerMatch: newHasEmployerMatch});
     }
 
-    function handleEmployerMatchChange(event) {
+    function handleEmployerMatchChange(event: ChangeEvent) {
         const newEmployerMatch = Number(event.target.value);
         setEmployerMatch(newEmployerMatch);
         updateSimulationState({employerMatch: newEmployerMatch});
     }
 
-    function handleEmployerMatchRatioChange(event) {
+    function handleEmployerMatchRatioChange(event: ChangeEvent) {
         const newEmployerMatchRatio = Number(event.target.value);
         setEmployerMatchRatio(newEmployerMatchRatio);
         updateSimulationState({employerMatchRatio: newEmployerMatchRatio});
     }
 
-    function handleInflationRateChange(event) {
+    function handleInflationRateChange(event: ChangeEvent) {
         const newInflationRate = Number(event.target.value);
         setInflationRate(newInflationRate);
         updateSimulationState({inflationRate: newInflationRate});
     }
 
-    function handleInterestRateChange(event) {
+    function handleInterestRateChange(event: ChangeEvent) {
         const newInterestRate = Number(event.target.value);
         setInterestRate(newInterestRate);
         updateSimulationState({interestRate: newInterestRate});
     }
 
     function updateSimulationState(newState: PartialSimulationState) {
-        function initialState(): SimulationState {
+        function initialState(): RetirementSimulationState {
             return {
                 balance: (newState.balance === undefined ? balance : newState.balance),
                 deposit: (newState.deposit === undefined ? deposit : newState.deposit),
@@ -143,7 +149,7 @@ function RetirementPensionAccountSimulation({ simulationID, simulationTypeID, di
             };
         }
 
-        function updateState(previousState: SimulationState, currentYear: number): SimulationState {
+        function updateState(previousState: RetirementSimulationState, currentYear: number): RetirementSimulationState {
             let depositCount = 1;
             if (previousState.depositFrequency === 'weekly') {
                 depositCount = 52;
@@ -190,6 +196,7 @@ function RetirementPensionAccountSimulation({ simulationID, simulationTypeID, di
             type: 'delete',
             state: {
                 id: simulationID,
+                label: label,
             },
         });
     }
@@ -199,6 +206,7 @@ function RetirementPensionAccountSimulation({ simulationID, simulationTypeID, di
             caption="A pension savings account that may or may not include matching funds from an employer, like a 401(k) or RRSP"
             dispatchSimulationUpdate={dispatchSimulationUpdate}
             simulationID={simulationID}
+            deleteHandler={deleteSimulation}
             label={label}
             handleLabelChange={handleLabelChange}>
             <Stack spacing={1} direction="row">

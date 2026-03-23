@@ -6,14 +6,32 @@ import Tooltip from '@mui/material/Tooltip';
 
 import {Simulation} from './Simulation.tsx';
 
-interface SimulationState {
-    balance: number,
+import type { ActionHandler, ChangeEvent, SimulationData } from '../types.ts';
+
+interface JackpotSimulationState extends SimulationData {
     withdrawal: number,
     readonly interestRate: number,
     readonly inflationRate: number,
 };
 
-function JackpotSimulation({ simulationID, simulationTypeID, dispatchSimulationUpdate }) {
+interface PartialState { 
+    label?: string,
+    deposit?: number,
+    withdrawal?: number,
+    federalTaxRate?: number,
+    stateTaxRate?: number,
+    inflationRate?: number,
+    interestRate?: number,
+    immediateExpenditures?: number,
+};
+
+interface JackpotProps {
+    simulationID: string,
+    simulationTypeID: string,
+    dispatchSimulationUpdate: ActionHandler,
+};
+
+function JackpotSimulation({ simulationID, simulationTypeID, dispatchSimulationUpdate }: JackpotProps) {
     const [ label, setLabel ] = useState('Jackpot');
     const [ deposit, setDeposit ] = useState(1_000_000);
     const [ withdrawal, setWithdrawal ] = useState(25_000);
@@ -23,57 +41,57 @@ function JackpotSimulation({ simulationID, simulationTypeID, dispatchSimulationU
     const [ interestRate, setInterestRate ] = useState(8);
     const [ immediateExpenditures, setImmediateExpenditures ] = useState(100_000);
 
-    function handleLabelChange(event) {
+    function handleLabelChange(event: ChangeEvent) {
         const newLabel = event.target.value;
         setLabel(newLabel)
         updateSimulationState({label: newLabel});
     }
 
-    function handleDepositChange(event) {
+    function handleDepositChange(event: ChangeEvent) {
         const newDeposit = Number(event.target.value);
         setDeposit(newDeposit);
         updateSimulationState({deposit: newDeposit});
     }
 
-    function handleWithdrawalChange(event) {
+    function handleWithdrawalChange(event: ChangeEvent) {
         const newWithdrawal = Number(event.target.value);
         setWithdrawal(newWithdrawal);
         updateSimulationState({withdrawal: newWithdrawal});
     }
 
-    function handleImmediateExpendituresChange(event) {
+    function handleImmediateExpendituresChange(event: ChangeEvent) {
         const newImmediateExpenditures = Number(event.target.value);
         setImmediateExpenditures(newImmediateExpenditures);
         updateSimulationState({immediateExpenditures: newImmediateExpenditures});
     }
 
-    function handleFederalTaxRateChange(event) {
+    function handleFederalTaxRateChange(event: ChangeEvent) {
         const newFederalTaxRate = Number(event.target.value);
         setFederalTaxRate(newFederalTaxRate);
         updateSimulationState({federalTaxRate: newFederalTaxRate});
     }
 
-    function handleStateTaxRateChange(event) {
+    function handleStateTaxRateChange(event: ChangeEvent) {
         const newStateTaxRate = Number(event.target.value);
         setStateTaxRate(newStateTaxRate);
         updateSimulationState({stateTaxRate: newStateTaxRate});
     }
 
-    function handleInflationRateChange(event) {
+    function handleInflationRateChange(event: ChangeEvent) {
         const newInflationRate = Number(event.target.value);
         setInflationRate(newInflationRate);
         updateSimulationState({inflationRate: newInflationRate});
     }
 
-    function handleInterestRateChange(event) {
+    function handleInterestRateChange(event: ChangeEvent) {
         const newInterestRate = Number(event.target.value);
         setInterestRate(newInterestRate);
         updateSimulationState({interestRate: newInterestRate});
     }
 
-    function updateSimulationState(newState) {
+    function updateSimulationState(newState: PartialState) {
         const newDeposit = (newState.deposit === undefined ? deposit : newState.deposit) * (1 - ((newState.federalTaxRate === undefined ? federalTaxRate: newState.federalTaxRate) / 100.0 + (newState.stateTaxRate === undefined ? stateTaxRate : newState.stateTaxRate) / 100.0));
-        function initialState(): SimulationState {
+        function initialState(): JackpotSimulationState {
             return {
                 balance: newDeposit - (newState.immediateExpenditures === undefined ? immediateExpenditures : newState.immediateExpenditures),
                 withdrawal: (newState.withdrawal === undefined ? withdrawal : newState.withdrawal),
@@ -82,7 +100,7 @@ function JackpotSimulation({ simulationID, simulationTypeID, dispatchSimulationU
             };
         }
 
-        function updateState(previousState: SimulationState): SimulationState {
+        function updateState(previousState: JackpotSimulationState): JackpotSimulationState {
             const newBalance = previousState.balance * (1 + previousState.interestRate / 100.0) - previousState.withdrawal;
             return {
                 ...previousState,

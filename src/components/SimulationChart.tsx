@@ -1,6 +1,12 @@
 import { LineChart } from '@mui/x-charts/LineChart';
 
-function SimulationChart({ chartState }) {
+import type {ChartState} from '../types.ts';
+
+interface SimulationChartProps {
+    chartState: ChartState,
+};
+
+function SimulationChart({ chartState }: SimulationChartProps) {
     if (!chartState.simulationData) {
         return (
             <div>
@@ -16,10 +22,10 @@ function SimulationChart({ chartState }) {
             <LineChart
                 xAxis={[{
                     data: chartState.xAxis,
-                    valueFormatter: (v) => v.toString(),
+                    valueFormatter: (v: number) => v.toString(),
                 }]}
                 yAxis={[{
-                    valueFormatter: (v) => formatter.format(v),
+                    valueFormatter: (v: number) => formatter.format(v),
                 }]}
                 series={chartState.simulationData.map((simulation) => {return {
                     data: simulation.data,

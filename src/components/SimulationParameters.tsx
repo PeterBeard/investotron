@@ -9,11 +9,13 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
+import type { ChangeEvent, ChartState, SimulationState, SimulationAction } from '../types.ts';
+
 import { JackpotSimulation } from './JackpotSimulation.tsx';
 import { RetirementSimulation } from './RetirementSimulation.tsx';
 import { RetirementPensionAccountSimulation } from './RetirementPensionAccountSimulation.tsx';
 
-function SimulationParameters({ setChartState }) {
+function SimulationParameters({ setChartState }: { setChartState: (state: ChartState) => void }) {
     const [ simulations, dispatchSimulationUpdate ] = useReducer(
         simulationUpdateReducer,
         []
@@ -22,19 +24,20 @@ function SimulationParameters({ setChartState }) {
     const [ startYear, setStartYear ] = useState(new Date().getFullYear());
     const [ simulationType, setSimulationType ] = useState('RetirementSimulation');
 
-    function handleYearsChange(event) {
+    function handleYearsChange(event: ChangeEvent) {
+        console.log(event);
         setYears(Number(event.target.value));
     }
 
-    function handleStartYearChange(event) {
+    function handleStartYearChange(event: ChangeEvent) {
         setStartYear(Number(event.target.value));
     }
 
-    function handleSimulationTypeChange(event) {
+    function handleSimulationTypeChange(event: ChangeEvent) {
         setSimulationType(event.target.value);
     }
 
-    function simulationUpdateReducer(currSimulationStates, action) {
+    function simulationUpdateReducer(currSimulationStates: SimulationState[], action: SimulationAction) {
         switch(action.type) {
             case 'add': {
                 return [
@@ -118,7 +121,7 @@ function SimulationParameters({ setChartState }) {
             type: 'add',
             state: {
                 id: crypto.randomUUID(),
-                type: simulationType,
+                label: 'Uninitialized Simulation',
             },
         });
     }
