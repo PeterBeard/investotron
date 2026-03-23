@@ -23,11 +23,11 @@ function SimulationParameters({ setChartState }) {
     const [ simulationType, setSimulationType ] = useState('RetirementSimulation');
 
     function handleYearsChange(event) {
-        setYears(event.target.value);
+        setYears(Number(event.target.value));
     }
 
     function handleStartYearChange(event) {
-        setStartYear(event.target.value);
+        setStartYear(Number(event.target.value));
     }
 
     function handleSimulationTypeChange(event) {
