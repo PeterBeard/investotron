@@ -109,14 +109,14 @@ function RetirementSimulation({ simulationID, simulationTypeID, dispatchSimulati
     function updateSimulationState(newState: PartialSimulationState) {
         function initialState(): SimulationState {
             return {
-                balance: (newState.balance === undefined ? balance : newState.balance),
-                deposit: (newState.deposit === undefined ? deposit : newState.deposit),
-                depositFrequency: (newState.depositFrequency === undefined ? depositFrequency : newState.depositFrequency),
-                inflateDeposits: (newState.inflateDeposits === undefined ? inflateDeposits : newState.inflateDeposits),
-                withdrawal: (newState.withdrawal === undefined ? withdrawal : newState.withdrawal),
-                withdrawalStartYear: (newState.withdrawalStartYear === undefined ? withdrawalStartYear : newState.withdrawalStartYear),
-                interestRate: (newState.interestRate === undefined ? interestRate : newState.interestRate),
-                inflationRate: (newState.inflationRate === undefined ? inflationRate : newState.inflationRate),
+                balance: (newState.balance ?? balance),
+                deposit: (newState.deposit ?? deposit),
+                depositFrequency: (newState.depositFrequency ?? depositFrequency),
+                inflateDeposits: (newState.inflateDeposits ?? inflateDeposits),
+                withdrawal: (newState.withdrawal ?? withdrawal),
+                withdrawalStartYear: (newState.withdrawalStartYear ?? withdrawalStartYear),
+                interestRate: (newState.interestRate ?? interestRate),
+                inflationRate: (newState.inflationRate ?? inflationRate),
             };
         }
 
@@ -147,7 +147,7 @@ function RetirementSimulation({ simulationID, simulationTypeID, dispatchSimulati
             state: {
                 id: simulationID,
                 type: simulationTypeID,
-                label: (newState.label === undefined ? label : newState.label),
+                label: (newState.label ?? label),
                 initialState: initialState,
                 updateState: updateState,
             },

@@ -90,13 +90,13 @@ function JackpotSimulation({ simulationID, simulationTypeID, dispatchSimulationU
     }
 
     function updateSimulationState(newState: PartialState) {
-        const newDeposit = (newState.deposit === undefined ? deposit : newState.deposit) * (1 - ((newState.federalTaxRate === undefined ? federalTaxRate: newState.federalTaxRate) / 100.0 + (newState.stateTaxRate === undefined ? stateTaxRate : newState.stateTaxRate) / 100.0));
+        const newDeposit = (newState.deposit ?? deposit) * (1 - ((newState.federalTaxRate ?? federalTaxRate) / 100.0 + (newState.stateTaxRate ?? stateTaxRate) / 100.0));
         function initialState(): JackpotSimulationState {
             return {
-                balance: newDeposit - (newState.immediateExpenditures === undefined ? immediateExpenditures : newState.immediateExpenditures),
-                withdrawal: (newState.withdrawal === undefined ? withdrawal : newState.withdrawal),
-                interestRate: (newState.interestRate === undefined ? interestRate : newState.interestRate),
-                inflationRate: (newState.inflationRate === undefined ? inflationRate : newState.inflationRate),
+                balance: newDeposit - (newState.immediateExpenditures ?? immediateExpenditures),
+                withdrawal: (newState.withdrawal ?? withdrawal),
+                interestRate: (newState.interestRate ?? interestRate),
+                inflationRate: (newState.inflationRate ?? inflationRate),
             };
         }
 
@@ -114,7 +114,7 @@ function JackpotSimulation({ simulationID, simulationTypeID, dispatchSimulationU
             state: {
                 id: simulationID,
                 type: simulationTypeID,
-                label: (newState.label === undefined ? label : newState.label),
+                label: (newState.label ?? label),
                 initialState: initialState,
                 updateState: updateState,
             },
